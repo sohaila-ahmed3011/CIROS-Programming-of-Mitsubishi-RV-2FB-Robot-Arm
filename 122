@@ -1,0 +1,29 @@
+Def io CP_START = Bit,3
+Def io CP_RESET = Bit,5
+Def io Sen_Slide = Bit,2
+
+wait CP_RESET = 1
+jovrd 80 
+mov P100
+*Label1
+wait CP_START = 1 
+if Sen_Slide = 1 then goto *Label2 else goto *Label1
+*Label2
+hopen 1 
+dly 1.0
+jovrd 70
+mov P12
+spd 50
+mvs P11
+hclose 1
+dly 1.0
+mvs P12
+jovrd 70 
+mov P22
+spd 50
+mvs P21
+hopen 1
+dly 1.0
+mvs P22 
+mov P100
+goto *Label1
