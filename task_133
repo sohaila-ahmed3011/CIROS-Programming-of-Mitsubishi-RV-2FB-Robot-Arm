@@ -1,3 +1,4 @@
+
 'Inputs/Outputs'
 Def io CP_START = Bit,3		'input'
 Def io CP_RESET = Bit,5		'input'
