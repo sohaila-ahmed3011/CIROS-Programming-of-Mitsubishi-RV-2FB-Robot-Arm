@@ -1,0 +1,62 @@
+
+'Inputs/Outputs'
+Def io CP_START = Bit,3		'input'
+Def io CP_RESET = Bit,5		'input'
+Def io Sen_Slide = Bit,2	'input'
+Def io CP_STOP = Bit,4
+Def io CP_L_START= Bit,0		'output
+Def io CP_L_RESET = Bit,1		
+Def io CP_L_Q1 = Bit,2  	'output'
+Def io CP_L_Q2 = Bit,3		'output'
+Def pos vecz50
+vecz50 = (0,0,50.00,0,0,0)
+Def Inte ppslow,ppfast,cpslow,cpfast
+ppslow = 50
+ppfast = 100
+cpslow = 100
+cpfast = 200
+
+'Interruption Acts'
+Def Act 1, CP_STOP  = 0 GoSub *LabelAct
+Act 1 = 1
+
+CP_L_RESET = 1
+wait CP_RESET = 1
+jovrd cpfast 
+mov P100
+CP_L_RESET = 0
+'Sequence'
+
+*Label1
+if Sen_Slide = 1 then GOTO *LABLE3 else goto *Label1
+*LABLE3
+CP_L_START = 1
+wait CP_START = 1 
+CP_L_START = 0
+hopen 1 
+dly 1.0
+jovrd cpfast
+mov P11+vecz50
+spd ppslow
+mov P11
+hclose 1
+dly 1.0
+mvs P11+vecz50
+jovrd cpfast 
+mov P21+vecz50
+spd ppslow
+mvs P21
+hopen 1
+dly 1.0
+mvs P21+vecz50 
+mov P100
+goto *Label1
+
+'Act'
+*LabelAct
+CP_L_Q1 = 1
+CP_L_Q2 = 1
+wait CP_START = 1
+CP_L_Q1 = 0
+CP_L_Q2 = 0
+Return 0
