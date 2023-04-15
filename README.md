@@ -7,7 +7,7 @@ This repository includes the programming of a  Mitsubishi RV-2FB robot arm progr
 <!-- <p align="center"><img src="data/RoboArmMits_p2.jpg" width="40%"></p>
 <p align="center"><img src="data/RoboArmMits_p1.jpg" width="40%"></p> -->
 
-<p float="center">
+<p align="center">
   <img src="data/RoboArmMits_p2.jpg" width="40%" />
   <img src="data/RoboArmMits_p1.jpg" width="40%" /> 
 </p>
