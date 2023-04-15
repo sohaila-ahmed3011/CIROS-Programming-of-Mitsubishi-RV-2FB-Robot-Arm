@@ -1,0 +1,20 @@
+
+'Inputs/Outputs'
+Def io CP_START = Bit,3			 'input'
+
+*label1
+spd 100
+jovrd 50 
+mov P100
+wait CP_START = 1 
+Def Plt 1, P71,P79,P81,,4,2,2 
+Def pos Pallet_Position
+M1 = 1
+
+*Pallet 
+Pallet_Position = Plt 1,M1
+mov Pallet_Position, -50.0
+mvs Pallet_Position
+mvs Pallet_Position, -50.0
+M1 = M1+1
+if M1=9 then goto *label1 else goto *Pallet
