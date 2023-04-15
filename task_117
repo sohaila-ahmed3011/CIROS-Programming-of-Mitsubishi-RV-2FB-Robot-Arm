@@ -1,0 +1,119 @@
+
+'Inputs/Outputs'
+Def io CP_START = Bit,3			 'input'
+Def io CP_RESET = Bit,5			 'input'
+Def io Sen_Slide = Bit,2	 	 'input'
+Def io Color_Sensor = Bit,900	 'input'
+Def io Orientation_Sensor = Bit,1'input'
+Def io CP_STOP = Bit,4			 'input'
+Def io CP_L_START= Bit,0		 'output
+Def io CP_L_RESET = Bit,1		 'output'
+Def io CP_L_Q1 = Bit,2  		 'output'
+Def io CP_L_Q2 = Bit,3			 'output'
+Def pos vecz50, veczincrement, twist
+vecz50 = (0,0,50.00,0,0,0)
+veczincrement = (0,0,0,0,0,-5.00)
+Def Inte ppslow,ppfast,cpslow,cpfast
+ppslow = 50
+ppfast = 100
+cpslow = 100
+cpfast = 200
+
+'Interruption Acts'
+Def Act 1, CP_STOP  = 0 GoSub *LabelAct
+Act 1 = 1
+
+CP_L_RESET = 1
+wait CP_RESET = 1
+jovrd cpfast 
+mov P100
+CP_L_RESET = 0
+
+'Sequence'
+*label1
+if Sen_Slide = 1 then GOTO *label3 else goto *label1
+*label3
+CP_L_START = 1
+wait CP_START = 1 
+CP_L_START = 0
+hopen 1 
+dly 1.0
+jovrd cpfast
+mov P11+vecz50
+spd ppslow
+mov P11
+hclose 1
+dly 1.0
+mvs P11+vecz50
+jovrd cpfast 
+mov P21+vecz50
+spd ppslow
+mvs P21
+hopen 1
+dly 1.0
+mvs P21+vecz50
+spd ppslow
+mov P31
+dly 1.0 
+spd ppslow
+
+'Color Check'
+*label2
+if Color_Sensor = 1 then GoTo *label4 else GoTo *label5
+*label4
+CP_L_Q1 = 1
+goto *label6
+
+*label5
+CP_L_Q2 = 1
+
+*label6
+jovrd cpfast
+mov P21+vecz50
+spd ppslow
+mvs P23
+hclose 1
+dly 1.0
+jovrd cpfast
+mvs P21+vecz50
+jovrd cpfast
+mvs P33+vecz50
+spd ppslow
+mvs P33
+
+'Orientation Check'
+twist = P33
+*label7
+twist = twist+veczincrement
+mov twist
+dly 1.0
+if Orientation_Sensor = 0 then goto *label8 else goto *label7  
+*label8
+spd ppslow
+mvs twist+vecz50
+jovrd cpfast
+mov P41+twist-P33+(0,0,0,0,0,-90)+vecz50
+spd ppslow
+mvs P41+twist-P33+(0,0,0,0,0,-90)
+hopen 1
+dly 1.0
+hclose 1
+dly 1.0
+'Output Slide'
+jovrd cpfast
+mvr P41+twist-P33+(0,0,0,0,0,-90), P100, P91+vecz50
+spd cpfast
+mvs P91
+hopen 1
+dly 1.0
+CP_L_Q1 = 0
+CP_L_Q2 = 0
+mvs P91+vecz50
+mov P100
+goto *label1
+
+'Act'
+*LabelAct
+wait CP_START = 1
+Return 0
+
