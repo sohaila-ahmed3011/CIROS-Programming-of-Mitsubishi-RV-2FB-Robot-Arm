@@ -1,0 +1,29 @@
+
+Def io CP_START = Bit,3		'input'
+Def io CP_RESET = Bit,5		'input'
+Def pos vecz50, down
+vecz50 = (0,0,-5.00,0,0,-5.00)
+Def Inte ppslow,ppfast,cpslow,cpfast, counter
+ppslow = 50
+ppfast = 100
+cpslow = 100
+cpfast = 200
+
+
+*Label2
+wait CP_RESET = 1 
+wait CP_START = 1
+jovrd cpfast 
+mov P100
+dly 1.0
+
+counter=1
+down=P100
+
+*Label1
+down = down+vecz50
+mov down
+dly 1.0
+counter = counter+1
+
+if counter <=10 then goto *Label1 else goto *Label2
